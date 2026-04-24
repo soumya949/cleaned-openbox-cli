@@ -1,0 +1,81 @@
+OpenBox CLI (openbox-cli) - Build Plan
+
+Legend:
+[ ] Pending
+[x] Done
+
+Phase 0 - Foundation
+[x] Scaffold TypeScript CLI package (npm installable, bin=openbox)
+[ ] Install deps + smoke test locally (npm install, openbox --help)
+[ ] Add basic CI checks (lint/typecheck/build) (optional)
+
+Phase 1 - Core CLI Architecture
+[ ] Define command taxonomy based on OpenBox API docs (top-level groups + subcommands)
+[ ] Implement global flags/options (--json, --base-url, --api-key, --token)
+[ ] Implement shared output utilities (JSON/text modes, colors, tables)
+[ ] Implement logging + debug mode (e.g. OPENBOX_DEBUG=1)
+[ ] Add consistent error handling + exit codes
+
+Phase 2 - Configuration + Auth
+[x] Local config read/write (per-user config dir)
+[x] Auth commands (login/logout/whoami) scaffolding
+[ ] Add support for X-API-Key auth (store apiKey in config)
+[ ] Secure token storage decision (plain file vs OS keychain)
+[ ] Add token refresh / session flow if required by OpenBox
+
+Phase 3 - OpenBox API Client Layer
+[x] API client stub (baseUrl + bearer token + fetch wrapper)
+[x] Decide official API base + endpoints (Swagger at /api/docs, JSON at /api/docs-json)
+[ ] Implement typed API modules (by tag: auth, user, agent, guardrail, policy, webhook, organization, api-key, sso)
+[ ] Add request retries/backoff + rate-limit handling
+[ ] Add pagination helpers
+
+Phase 4 - API Feature Implementation (endpoint-driven)
+[ ] health: openbox health
+
+[ ] auth: openbox auth profile|csrf|login|logout|refresh|forgot-password|reset-password|change-password
+[ ] user: openbox user roles
+
+[ ] agent: openbox agent list|get|create|update|delete
+[ ] agent: openbox agent metrics|violations|logs|drift|assessments|observability|issues
+[ ] agent trust/approvals/insights: trust histories|events|recovery-status, approvals pending|history|decide, insights metrics
+[ ] agent sessions: list|active|get|logs|goal-alignment-stats|reasoning-trace|terminate
+[ ] agent guardrails: create|list|get|update|delete|reorder + metrics + violation-logs
+[ ] agent policies: create|list|get|update|current + evaluations + metrics
+[ ] agent behavior rules: semantic-types, list|create|current|get|update|delete|rollback, status, versions, behavior metrics + violations
+[ ] agent key mgmt: rotate-api-key, revoke-api-key
+[ ] agent aivss/goal-alignment: aivss score, update configs, recalculate trust, goal-alignment trend/recent-drifts
+
+[ ] guardrail: openbox guardrail run-test
+[ ] policy: openbox policy evaluate
+
+[ ] webhook: openbox webhook create|list|get|update|delete|deliveries|test|regenerate-secret
+
+[ ] organization: openbox org register|get|settings get|settings update|features|members list|members remove
+[ ] organization teams: create|list|get|update|delete|members add|members list|members remove|stats
+[ ] organization audit-logs: list|get|export preview|export create|exports list|export status|download|delete
+[ ] organization dashboard/sessions/approvals: dashboard, sessions, approvals, approvals history, approvals metrics, approvals sla, tier-trends
+
+[ ] api-key: openbox api-key create|list|get|update|delete
+[ ] sso: openbox sso get|remove|configure saml|configure oidc|enforce|metadata|verify|status
+
+Phase 5 - UX / Developer Experience
+[ ] Interactive prompts where helpful (confirmations, selections)
+[ ] Non-interactive mode for CI (--yes, --json)
+[ ] Better help examples + command aliases
+[ ] Shell completion (bash/zsh/powershell) (optional)
+
+Phase 6 - Quality
+[ ] Unit tests for libs (config, client, parsers)
+[ ] Integration test harness (mock server or recorded fixtures)
+[ ] E2E CLI tests (spawn CLI, assert outputs)
+
+Phase 7 - Packaging & Release
+[ ] Versioning strategy (semver) + changelog
+[ ] Publish-ready package metadata (repository, keywords)
+[ ] Build artifacts verified (dist/*, shebang works)
+[ ] Publish to npm (openbox-cli)
+
+Notes / Inputs Needed
+- PRD details: paste key sections or let me extract text from openbox_cli_prd_v2.pdf using a local tool.
+- OpenBox API base currently used for docs: https://openbox-api.node.lat (Swagger: /api/docs, OpenAPI JSON: /api/docs-json)
